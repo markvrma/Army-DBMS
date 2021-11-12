@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
+
 using namespace std;
+#include "requiredClasses.h"
 void add_user(void);
 void user_login(void);
 void change_pass(string);
@@ -7,7 +9,8 @@ void admin_login(void);
 void modify_details(void);
 void delete_details(void);
 void display_all(void);
-void display_one(void);
+void display_one(void); 
+
 class Sepoy
 {
 private:
