@@ -519,8 +519,8 @@ public:
     void modify_sqd_leader()
     {
         aircraftman::modify();
-        cout<<"Enter modified Squadron Id: ";
-        cin>>this->squadron_id;
+        cout << "Enter modified Squadron Id: ";
+        cin >> this->squadron_id;
     }
 };
 
@@ -769,7 +769,7 @@ void army_personal_dashboard(void)
     while (true)
     {
         cout << "\n\t\tMENU\n";
-        cout<<"\n0. Add user\n";
+        cout << "\n0. Add user\n";
         cout << "\n1. Sepoy login";
         cout << "\n2. Lieutenant login";
         cout << "\n3. Major login";
@@ -865,7 +865,7 @@ void add_user(void)
         cin.ignore();
         cin.get();
     }
-    else if(choice == 4)
+    else if (choice == 4)
     {
         general obj;
         ofstream oFile;
@@ -1551,7 +1551,6 @@ void modify_airforce_personel(string post_name)
     cin.get();
 }
 
-
 void delete_personel(string post_name)
 {
     string id;
@@ -1821,14 +1820,129 @@ void war_details(void)
         }
         break;
         case 2:
+        {
+            ofstream fl;
+            fl.open("war.bin", ios::binary | ios::app);
+            if (!fl.is_open())
+            {
+                cout << "File could not be opened... Press any Key to exit...";
+                cin.ignore();
+                cin.get();
+                return;
+            }
+            war obj;
+            int n;
+            cout << "\nEnter the number of details: ";
+            cin >> n;
+            for (int i = 0; i < n; i++)
+            {
+                obj.getter_war();
+                fl.write((char *)&obj, sizeof(war));
+            }
+            fl.close();
+            cin.get();
+            cin.ignore();
+        }
         break;
         default:
-        
+            cout << "\nEnter correct choice:";
+            break;
         }
     }
 }
-        
-void delete_personel(string post_name)
+
+// void delete_personel(string post_name)
+// {
+//     string id;
+//     cout << "Enter the Id: ";
+//     cin >> id;
+//     ifstream iFile;
+//     ofstream oFile;
+//     oFile.open("temp.bin", ios::binary | ios::out);
+//     oFile.seekp(0, ios::beg);
+//     if (post_name == "Sepoy")
+//     {
+//         iFile.open("sepoy.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         sepoy obj;
+//         while (iFile.read((char *)(&obj), sizeof(sepoy)))
+//         {
+//             if (obj.ret_sep_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(sepoy));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("sepoy.bin");
+//         rename("temp.bin", "sepoy.bin");
+//     }
+//     else if (post_name == "Lieutenant")
+//     {
+//         iFile.open("lieu.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         lieutenant obj;
+//         while (iFile.read((char *)(&obj), sizeof(lieutenant)))
+//         {
+//             if (obj.ret_lieu_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(lieutenant));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("lieu.bin");
+//         rename("temp.bin", "lieu.bin");
+//     }
+//     else if (post_name == "Major")
+//     {
+//         iFile.open("major.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         Major obj;
+//         while (iFile.read((char *)(&obj), sizeof(Major)))
+//         {
+//             if (obj.ret_maj_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(Major));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("major.bin");
+//         rename("temp.bin", "major.bin");
+//     }
+//     else
+//     {
+//         cout << "\nInvalid Post.....";
+//         return;
+//     }
+//     cout << "\n\n\tRecord Deleted ..";
+//     cin.ignore();
+//     cin.get();
+// }
+
+void delete_airforce_personel(string post_name)
 {
     string id;
     cout << "Enter the Id: ";
@@ -1837,9 +1951,9 @@ void delete_personel(string post_name)
     ofstream oFile;
     oFile.open("temp.bin", ios::binary | ios::out);
     oFile.seekp(0, ios::beg);
-    if (post_name == "Sepoy")
+    if (post_name == "Aircraftman")
     {
-        iFile.open("sepoy.bin", ios::binary | ios::in);
+        iFile.open("aircraftman.bin", ios::binary | ios::in);
         if (!iFile.is_open())
         {
             cout << "File could not be opened... Press any Key to exit...";
@@ -1849,21 +1963,21 @@ void delete_personel(string post_name)
         }
         iFile.seekg(0, ios::beg);
         sepoy obj;
-        while (iFile.read((char *)(&obj), sizeof(sepoy)))
+        while (iFile.read((char *)(&obj), sizeof(aircraftman)))
         {
             if (obj.ret_sep_id() != id)
             {
-                oFile.write((char *)(&obj), sizeof(sepoy));
+                oFile.write((char *)(&obj), sizeof(aircraftman));
             }
         }
         oFile.close();
         iFile.close();
-        remove("sepoy.bin");
-        rename("temp.bin", "sepoy.bin");
+        remove("aircraftman.bin");
+        rename("temp.bin", "aircraftman.bin");
     }
-    else if (post_name == "Lieutenant")
+    else if (post_name == "Flight Lieutenant")
     {
-        iFile.open("lieu.bin", ios::binary | ios::in);
+        iFile.open("flight_lieu.bin", ios::binary | ios::in);
         if (!iFile.is_open())
         {
             cout << "File could not be opened... Press any Key to exit...";
@@ -1872,22 +1986,22 @@ void delete_personel(string post_name)
             return;
         }
         iFile.seekg(0, ios::beg);
-        lieutenant obj;
-        while (iFile.read((char *)(&obj), sizeof(lieutenant)))
+        flight_lieutenant obj;
+        while (iFile.read((char *)(&obj), sizeof(flight_lieutenant)))
         {
-            if (obj.ret_lieu_id() != id)
+            if (obj.ret_fli_lieu_id() != id)
             {
-                oFile.write((char *)(&obj), sizeof(lieutenant));
+                oFile.write((char *)(&obj), sizeof(flight_lieutenant));
             }
         }
         oFile.close();
         iFile.close();
-        remove("lieu.bin");
-        rename("temp.bin", "lieu.bin");
+        remove("flight_lieu.bin");
+        rename("temp.bin", "flight_lieu.bin");
     }
-    else if (post_name == "Major")
+    else if (post_name == "squadron_leader")
     {
-        iFile.open("major.bin", ios::binary | ios::in);
+        iFile.open("squadron_leader.bin", ios::binary | ios::in);
         if (!iFile.is_open())
         {
             cout << "File could not be opened... Press any Key to exit...";
@@ -1897,11 +2011,11 @@ void delete_personel(string post_name)
         }
         iFile.seekg(0, ios::beg);
         Major obj;
-        while (iFile.read((char *)(&obj), sizeof(Major)))
+        while (iFile.read((char *)(&obj), sizeof(squadron_leader)))
         {
             if (obj.ret_maj_id() != id)
             {
-                oFile.write((char *)(&obj), sizeof(Major));
+                oFile.write((char *)(&obj), sizeof(squadron_leader));
             }
         }
         oFile.close();
@@ -1917,30 +2031,31 @@ void delete_personel(string post_name)
     cout << "\n\n\tRecord Deleted ..";
     cin.ignore();
     cin.get();
-}       {
-            ofstream fl;
-            fl.open("war.bin", ios::binary | ios::app);
-            if (!fl.is_open())
-            {
-                cout << "File could not be opened... Press any Key to exit...";
-                cin.ignore();
-                cin.get();
-                return;
-            }
-            war obj;
-            obj.getter_war();
-            fl.write((char *)&obj, sizeof(war));
-            fl.close();
-            cin.ignore();
-            cin.get();
-        }
-        break;
-        default:
-            cout << "\nEnter correct choice...";
-            break;
-        }
-    }
 }
+// {
+//     ofstream fl;
+//     fl.open("war.bin", ios::binary | ios::app);
+//     if (!fl.is_open())
+//     {
+//         cout << "File could not be opened... Press any Key to exit...";
+//         cin.ignore();
+//         cin.get();
+//         return;
+//     }
+//     war obj;
+//     obj.getter_war();
+//     fl.write((char *)&obj, sizeof(war));
+//     fl.close();
+//     cin.ignore();
+//     cin.get();
+// }
+// break;
+// default:
+// cout << "\nEnter correct choice...";
+// break;
+// }
+// }
+// }
 
 void airforce_field()
 {
@@ -2052,10 +2167,10 @@ void add_airforce_user(void)
         flight_lieutenant obj;
         ofstream oFile;
         oFile.open("flight_lieu.bin", ios::binary | ios::app);
-        for(int i = 0; i<n; i++)
-        {    
-        obj.getter_flight_lieutenant();
-        oFile.write((char *)&obj, sizeof(flight_lieutenant));
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_flight_lieutenant();
+            oFile.write((char *)&obj, sizeof(flight_lieutenant));
         }
         oFile.close();
         cout << "\n\nflight lieutinant record Has Been Created ";
@@ -2067,10 +2182,10 @@ void add_airforce_user(void)
         squadron_leader obj;
         ofstream oFile;
         oFile.open("squadron_leader.bin", ios::binary | ios::app);
-        for(int i = 0; i<n; i++)
-        {    
-        obj.getter_squadron_leader();
-        oFile.write((char *)&obj, sizeof(squadron_leader)); 
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_squadron_leader();
+            oFile.write((char *)&obj, sizeof(squadron_leader));
         }
         oFile.close();
         cout << "\nSquadron Leader record Has Been Created ";
@@ -2440,7 +2555,7 @@ void air_chief_marshal_login(void)
             string post_name;
             cout << "\nWhom to add(Aircraftman/Flight Lieutenant/Squadron Leader)";
             cin >> post_name;
-            add_personel(post_name);
+            add_airforce_personel(post_name);
             break;
         }
         case '2':
@@ -2448,7 +2563,7 @@ void air_chief_marshal_login(void)
             string post_name;
             cout << "\nWhom to modify(Aircraftman/Flight Lieutenant/Squadron Leader)";
             cin >> post_name;
-            modify_personel(post_name);
+            modify_airforce_personel(post_name);
             break;
         }
         case '3':
@@ -2456,7 +2571,7 @@ void air_chief_marshal_login(void)
             string post_name;
             cout << "\nWhom to remove(Aircraftman/Flight Lieutenant/Squadron Leader)";
             cin >> post_name;
-            delete_personel(post_name);
+            delete_airforce_personel(post_name);
             break;
         }
         default:
@@ -2506,4 +2621,3 @@ void air_chief_marshal_login(void)
 //     cin.ignore();
 //     cin.get();
 // }
-
