@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -14,8 +15,18 @@ using std::ofstream;
 using std::string;
 using std::vector;
 
-void army_feild(void);
-void add_user(void);
+//functions used in the program
+//void add_user(void);
+void main_menu();
+void army_field(void);
+void sepoy_login(void);
+void lieu_login(void);
+void major_login();
+void general_login(void);
+void add_personel(string post_name);
+void modify_personel(string post_name);
+void delete_personel(string post_name);
+
 //sepoy.bin  ||   major.bin
 //This header file contains the class definitions of all the Defence Personell Involved
 //weapons
@@ -86,18 +97,6 @@ public:
         }
     }
 
-    void getter_general()
-    {
-        cout << "Enter Name: ";
-        cin >> name;
-        cout << "Date of Birth:  ";
-        date_of_birth.getter_date();
-        cout << "Date of Joining: ";
-        date_of_joining.getter_date();
-        cout << "Enter Section Id: ";
-        cin >> sepoy_section_id;
-    }
-
     void getter_sepoy()
     {
         cout << "Enter Sepoy Id: ";
@@ -121,6 +120,22 @@ public:
     string ret_sep_name()
     {
         return name;
+    }
+
+    void modify() ////////////why it is here?
+    {
+        cout << "Enter modified Name: ";
+        cin >> name;
+        cout << "Modified Date of Birth:  ";
+        date_of_birth.getter_date();
+        cout << "Modified Date of Joining: ";
+        date_of_joining.getter_date();
+    }
+    void modify_sepoy()
+    {
+        modify();
+        cout << "Enter modified section Id: ";
+        cin >> sepoy_section_id;
     }
     void display()
     {
@@ -158,12 +173,23 @@ public:
     void display_lieutenant()
     {
         cout << "Lieutenant Id: " << lieutenant_id;
-        display();
+        sepoy::display();
         cout << "Section Id: " << section_id;
+    }
+    string ret_lieu_id()
+    {
+        return lieutenant_id;
+    }
+
+    void modify_lieutenant()
+    {
+        sepoy::modify();
+        cout << "Enter modified section Id: ";
+        cin >> this->section_id;
     }
 };
 
-class major : public lieutenant //head of a company
+class Major : public lieutenant //head of a company
 {
 private:
     string major_id;
@@ -185,6 +211,17 @@ public:
         sepoy::display();
         cout << " Company Id: " << company_id;
     };
+
+    string ret_maj_id()
+    {
+        return major_id;
+    }
+    void modify_major()
+    {
+        sepoy::modify();
+        cout << "Enter modified company Id: ";
+        cin >> this->company_id;
+    }
 };
 
 class section_army
@@ -197,7 +234,7 @@ protected:
     unsigned num_tank;
     unsigned num_mortar;
     unsigned num_combat_shotgun;
-
+    
 public:
     //unsigned num_sepoys();    //counts and returns the number of sepoys in a section
     //void add_sepoy_to_section(sepoy &);  //adds a sepoys into the section whenever a sepoy is added
@@ -264,9 +301,11 @@ public:
 // };
 
 // he can access all the class using multiple inheritance
-class general : public major, public section_army, public company //public platoon //can edit the details of any employee // can modify the war and weapons data
+class general : public Major, public section_army, public company //public platoon //can edit the details of any employee // can modify the war and weapons data
 {
 private:
+    string general_username;
+
 public:
     //function that he can do
     //edit or modify details of any soldier
@@ -274,6 +313,25 @@ public:
     //view all the arsenal data which army has
     //can view/modify and delete all the info related to war and conflicts
     //add functions accordingly
+    void getter_general() //temporary for first entry
+    {
+        cout << "Enter General Username:  ";
+        cin >> general_username;
+        sepoy::getter();
+    }
+    void display_general()
+    {
+        cout << "\nUsername: " << general_username;
+        sepoy::display();
+    }
+    string ret_gene_username() //returns the username of general which is equivalent of sepoy_id for a sepoy
+    {
+        return general_username;
+    }
+    string ret_gen_name() ///
+    {
+        return name;
+    }
     friend class cds;
 };
 
@@ -504,6 +562,45 @@ public:
     friend class cds;
 };
 
+///////////////war and conflict
+
+class war_conflict
+{
+private:
+    date war_start_date;
+    date war_end_date;
+    string location;
+    string opposition;    //name of opposing country
+    unsigned num_our_casualties;
+    unsigned num_thiers_casualties;
+    unsigned expenditure;
+    string result; //one sentence description
+public:
+    void getter_war()
+    {
+        cout << "War Beginning Date: "; ////////
+        war_start_date.getter_date();
+        cout << "War End Date: "; ////////
+        war_end_date.getter_date();
+        cout << "Enter the location where the war took place: ";
+        cin >> location;
+        cout<<"Enter the name of country against which war took place: ";
+        cin>>opposition;
+        cout << "Enter the number of casualties from from our side: ";
+        cin >> num_our_casualties;
+        cout << "Enter the number of casualties from from opposing side: ";
+        cin >> num_our_casualties;
+        cout<<"Enter our expenditure(in INR): ";
+        cin>>expenditure;
+        cout<<"Describe the result of war: ";
+        getline(cin,result);
+    }
+    void display_war()
+    {
+        
+    }
+};
+
 //main function declaration
 
 void main_menu()
@@ -547,9 +644,52 @@ int main()
     main_menu();
 }
 
-//Army login
-void army_field(void)
+//for printing section-wise weapon info
+void print_weapon_info_section_wise()
 {
+    
+}
+
+//Army login
+
+void army_field()
+{
+    cout << "\n\t\tMenu\n\n";
+    cout << "1. Login to Personal Dashboard\n";
+    cout << "2. Section-wise weapon allocation\n";
+    cout << "3. War and Conflicts\n";
+    cout << "4. Exit\n";
+    cout << "9. Return to Previous Menu\n";
+flag5:
+    cout << "\n\nEnter your choice: ";
+    char choice;
+    cin >> choice;
+    switch (choice)
+    {
+    case '1':
+        cout << "\n\nPersonel Dashboard Login\n";
+        cout << "--------------------------------\n\n";
+        Personel_Dashboard();
+        break;
+    case '2':
+        print_weapon_info_section_wise();
+        break;
+    case '3':
+        //////
+        break;
+    case '4':
+        cout << "\nGoodbye!\n";
+        exit(0);
+        break;
+    default:
+        cout << "Error: Invalid Choice Selection" << endl;
+        goto flag5;
+    }
+}
+
+void Personel_Dashboard(void)
+{
+
     int ch;
     while (true)
     {
@@ -581,7 +721,7 @@ void army_field(void)
             exit(0);
         case 9:
             cout << "Going back to previous menu..." << endl;
-            main_menu();
+            army_field();
             break;
         default:
             cout << "Error: Invalid Choice Selection\n\n";
@@ -614,7 +754,7 @@ void add_user(void)
     {
         lieutenant obj;
         ofstream oFile;
-        oFile.open("lieutinant.bin", ios::binary | ios::app);
+        oFile.open("lieu.bin", ios::binary | ios::app);
         obj.getter_lieutenant();
         oFile.write((char *)&obj, sizeof(lieutenant));
         oFile.close();
@@ -624,11 +764,11 @@ void add_user(void)
     }
     else if (choice == 3)
     {
-        class major obj;
+        Major obj;
         ofstream oFile;
         oFile.open("major.bin", ios::binary | ios::app);
         obj.getter_major();
-        oFile.write((char *)&obj, sizeof(major));
+        oFile.write((char *)&obj, sizeof(Major));
         oFile.close();
         cout << "\n\nmajor record Has Been Created ";
         cin.ignore();
@@ -645,13 +785,13 @@ void sepoy_login(void)
     cin >> sepoy_id;
     cout << "\nEnter the Password: ";
     cin >> password;
-    ifstream file; //read mode
-    file.open("sepoy.bin", ios::binary | ios::in);
+    fstream file; //read mode
+    file.open("sepoy.bin", ios::binary | ios::in | ios::out);
     if (!file.is_open())
     {
         cout << "File could not be opened !! Press any Key to exit";
         cin.ignore();
-        cin.get();
+        cin.get(); //////////handle here correctly
         return;
     }
     file.seekg(0, ios::beg);
@@ -684,7 +824,11 @@ void sepoy_login(void)
                 {
                     cout << "Enter the new password: ";
                     cin >> pass1;
-                    change_pass_sepoy(obj.ret_sep_id(), pass1);
+                    // change_pass_sepoy(obj.ret_sep_id(), pass1, "Sepoy");
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)&(obj), sizeof(sepoy));
                     cout << "\nPassword Changed Successfully!" << endl;
                 }
             }
@@ -692,10 +836,10 @@ void sepoy_login(void)
             // break;
         }
     }
-    if(!found)
+    if (!found)
     {
-        cout<<"Incorrect Password or Record not found in database\n";
-    }    
+        cout << "Incorrect Password or Record not found in database\n";
+    }
     file.close();
     army_field();
     // if (found)
@@ -712,49 +856,249 @@ void sepoy_login(void)
     cin.ignore();
     cin.get();
 }
-void change_pass_sepoy(string id, string password)
+// void change_pass_sepoy(string id, string password)
+// {
+//     bool found = false;
+//     sepoy obj;
+//     fstream fl;
+//     fl.open("sepoy.bin", ios::binary | ios::in | ios::out);
+//     if (!fl.is_open())
+//     {
+//         cout << "File could not be opened. Press any Key to exit...";
+//         cin.ignore();
+//         cin.get();
+//         return; /////////////////handle here correctly
+//     }
+//     fl.seekg(0, ios::beg);
+//     while (!fl.eof() && found == false)
+//     {
+//         fl.read((char *)(&obj), sizeof(sepoy));
+//         if (obj.ret_sep_id() == id)
+//         {
+//             obj.set_password(password);
+//             int pos = (-1) * static_cast<int>(sizeof(obj));
+//             fl.seekp(pos, ios::cur);
+//             fl.write((char *)(&obj), sizeof(sepoy));
+//             cout << "\n\n\t Record Updated";
+//             found = true;
+//         }
+//     }
+//     fl.close();
+//     if (found == false)
+//         cout << "\n\n Record Not Found ";
+//     cin.ignore();
+//     cin.get();
+// }
+
+//lieutenant login
+void lieu_login(void)
 {
-    bool found = false;
-    sepoy obj;
-    fstream fl;
-    fl.open("sepoy.bin", ios::binary | ios::in | ios::out);
-    if (!fl.is_open())
+    string lieu_id;
+    string password;
+    cout << "\nEnter Lieutenant Id: ";
+    cin >> lieu_id;
+    cout << "\nEnter the Password: ";
+    cin >> password;
+    fstream file; //opening in read mode
+    file.open("lieu.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
     {
-        cout << "File could not be opened. Press any Key to exit...";
+        cout << "File could not be opened !! Press any Key to exit";
         cin.ignore();
-        cin.get();
+        cin.get(); /////handle here correctly
         return;
     }
-    fl.seekg(0, ios::beg);
-    while (!fl.eof() && found == false)
+    file.seekg(0, ios::beg); //setting the file pointer at the beginning of file
+    lieutenant obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(lieutenant)))
     {
-        fl.read((char *)(&obj), sizeof(sepoy));
-        if (obj.ret_sep_id() == id)
+        if (obj.ret_lieu_id() == lieu_id && obj.get_password() == password)
         {
-            obj.set_password(password);
-            int pos = (-1) * static_cast<int>(sizeof(obj));
-            fl.seekp(pos, ios::cur);
-            fl.write((char *)(&obj), sizeof(sepoy));
-            cout << "\n\n\t Record Updated";
+            //obj.display_sepoy();
             found = true;
+            cout << "OPTIONS\n";
+            cout << "1. View your Profile\n";
+            cout << "2. Change your password\n";
+            cout << "Enter your choice: ";
+            int choice;
+            cin >> choice;
+            if (choice == 1)
+            {
+                obj.display_lieutenant();
+                cout << "Enter any key to continue...";
+                cin.get();
+            }
+            else if (choice == 2)
+            {
+                cout << "Enter your current password: ";
+                string pass1;
+                cin >> pass1;
+                if (pass1 == obj.get_password())
+                {
+                    cout << "Enter the new password: ";
+                    cin >> pass1;
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)(&obj), sizeof(lieutenant));
+                    //change_pass_sepoy(obj.ret_sep_id(), pass1);
+                    cout << "\nPassword Changed Successfully!" << endl;
+                }
+            }
+            break;
+            // break;
         }
     }
-    fl.close();
-    if (found == false)
-        cout << "\n\n Record Not Found ";
+    if (!found)
+    {
+        cout << "Incorrect Password or Record not found in database\n";
+    }
+    file.close();
+    army_field();
+    // if (found)
+    // {
+    //     string new_password;
+    //     cout << "\nWant to change password: ";
+    //     char ch;
+    //     cin>>ch;
+    //     cin >> new_password;
+    //     change_pass(sepoy_id, new_password);
+    // }
+    // else
+    // cout << "\nRecords not found!!";
     cin.ignore();
     cin.get();
 }
+
+void major_login()
+{
+    string major_id;
+    string password;
+    cout << "\nEnter Major ID: ";
+    cin >> major_id;
+    cout << "\nEnter the password ";
+    cin >> password;
+    fstream file; //opening in read mode
+    file.open("major.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get(); /////handle here correctly
+        return;
+    }
+    file.seekg(0, ios::beg); //setting the file pointer at the beginning of file
+    Major obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(Major)))
+    {
+        if (obj.ret_maj_id() == major_id && obj.get_password() == password)
+        {
+            //obj.display_sepoy();
+            found = true;
+            cout << "OPTIONS\n";
+            cout << "1. View your Profile\n";
+            cout << "2. Change your password\n";
+            cout << "Enter your choice: ";
+            int choice;
+            cin >> choice;
+            if (choice == 1)
+            {
+                obj.display_major();
+                cout << "Enter any key to continue...";
+                cin.get();
+            }
+            else if (choice == 2)
+            {
+                cout << "Enter your current password: ";
+                string pass1;
+                cin >> pass1;
+                if (pass1 == obj.get_password())
+                {
+                    cout << "Enter the new password: ";
+                    cin >> pass1;
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)(&obj), sizeof(Major));
+                    cout << "\n\n\tRecord Updated\n";
+                    //change_pass_sepoy(obj.ret_sep_id(), pass1);
+                    cout << "\nPassword Changed Successfully!" << endl;
+                }
+            }
+            break;
+            // break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Incorrect Password or Record not found in database\n";
+    }
+    file.close();
+    army_field();
+    // if (found)
+    // {
+    //     string new_password;
+    //     cout << "\nWant to change password: ";
+    //     char ch;
+    //     cin>>ch;
+    //     cin >> new_password;
+    //     change_pass(sepoy_id, new_password);
+    // }
+    // else
+    // cout << "\nRecords not found!!";
+    cin.ignore();
+    cin.get();
+}
+
+// void change_passwd_general(string usrnme, string password)
+// {
+//     bool found = false;
+//     general obj;
+//     fstream fl;
+//     fl.open("general.bin", ios::binary | ios::in | ios::out);
+//     if (!fl.is_open())
+//     {
+//         cout << "General Information could not be fetched\n";
+//         cout << "Error: File could not be opened.\n";
+//         cout << "Press any Key to exit..."; //////
+//         cin.ignore();
+//         cin.get();
+//         return;
+//     }
+//     fl.seekg(0, ios::beg);
+//     while (!fl.eof() && found == false)
+//     {
+//         fl.read((char *)(&obj), sizeof(general));
+//         if (obj.ret_gene_username() == usrnme)
+//         {
+//             obj.set_password(password);
+//             int pos = (-1) * static_cast<int>(sizeof(obj));
+//             fl.seekp(pos, ios::cur);
+//             fl.write((char *)(&obj), sizeof(general));
+//             cout << "\n\n\t Record Updated";
+//             found = true;
+//         }
+//     }
+//     fl.close();
+//     if (found == false)
+//         cout << "\n\n Record Not Found ";
+//     cin.ignore();
+//     cin.get();
+// }
 void general_login(void)
 {
-    string general_id;
+    cout << "\n\n\tWelcome to General login\n";
+    cout << "   ----------------------------------\n\n";
+    string general_usrnme;
     string password;
-    cout << "\nEnter general Id: ";
-    cin >> general_id;
+    cout << "\nEnter the username: ";
+    cin >> general_usrnme;
     cout << "\nEnter the Password: ";
     cin >> password;
-    ifstream file;
-    file.open("general.bin", ios::binary | ios::in);
+    fstream file;
+    file.open("general.bin", ios::binary | ios::in | ios::out);
     if (!file.is_open())
     {
         cout << "File could not be opened !! Press any Key to exit";
@@ -767,32 +1111,73 @@ void general_login(void)
     bool found = false;
     while (file.read((char *)&obj, sizeof(general)))
     {
-        if (obj.get_password() == password && obj.ret_sep_id() == general_id)
+        if (obj.ret_gene_username() == general_usrnme && obj.get_password() == password)
         {
-            obj.display_sepoy();
+            obj.general::display_general(); ////////obj.display_general
             found = true;
             break;
         }
     }
-    file.close();
     if (found)
     {
-        int choice;
+        char choice;
         cout << "\nSelect an Operation Listed Below:";
-        cout << "\n1. Add a Sepoy: ";
-        cout << "\n2. Modify Details of Sepoy: ";
-        cout << "\n3. Delete Details of Sepoy: ";
-        cout << "\n4. Update Password: ";
-        cout << "\nEnter your Choice: ";
+        cout << "\na. View your Profile";
+        cout << "\nb. Update your Password\n";
+        cout << "\n1. Add a Personel";
+        cout << "\n2. Modify detail(s) of a Personel: ";
+        cout << "\n3. Remove a Personel: ";
+        cout << "\n\nEnter your Choice: ";
         cin >> choice;
         switch (choice)
         {
-        case 1:
-            add_sepoy();
+        case 'a':
+            obj.display_general();
+            cout << "\n\nEnter any key to continue...";
+            cin.get();
             break;
-        case 2:
-            modify_sepoy();
+        case 'b':
+        {
+            cout << "\nEnter your current password: ";
+            string pass1;
+            cin >> pass1;
+            if (pass1 == obj.get_password()) //password is same variable for both sepoy and general
+            {
+                cout << "Enter the new password: ";
+                cin >> pass1;
+                obj.set_password(pass1);
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                file.seekp(pos, ios::cur);
+                file.write((char *)&(obj), sizeof(general));
+                // change_passwd_general(obj.ret_gene_username(), pass1);
+                cout << "\nPassword Changed Successfully!" << endl;
+            }
+        }
+        break;
+        case '1':
+        {
+            string post_name;
+            cout << "\nWhom to add(Sepoy/Lieutenant/Major)";
+            cin >> post_name;
+            add_personel(post_name);
             break;
+        }
+        case '2':
+        {
+            string post_name;
+            cout << "\nWhom to add(Sepoy/Lieutenant/Major)";
+            cin >> post_name;
+            modify_personel(post_name);
+            break;
+        }
+        case '3':
+        {
+            string post_name;
+            cout << "\nWhom to add(Sepoy/Lieutenant/Major)";
+            cin >> post_name;
+            delete_personel(post_name);
+            break;
+        }
         default:
             cout << "\nEnter correct choice...";
             break;
@@ -800,50 +1185,132 @@ void general_login(void)
     }
     else
         cout << "\nRecord not found!!";
+    file.close();
     cin.ignore();
     cin.get();
 }
-void add_sepoy()
+void add_personel(string post_name)
 {
-    sepoy obj;
     ofstream oFile;
-    oFile.open("sepoy.bin", ios::binary | ios::app);
-    obj.getter_sepoy();
-    oFile.write((char *)&obj, sizeof(sepoy));
+    if (post_name == "Sepoy")
+    {
+        sepoy obj;
+        oFile.open("sepoy.bin", ios::binary | ios::app);
+        obj.getter_sepoy();
+        oFile.write((char *)&obj, sizeof(sepoy));
+    }
+    else if (post_name == "Lieutenant")
+    {
+        lieutenant obj;
+        oFile.open("lieu.bin", ios::binary | ios::app);
+        obj.getter_lieutenant();
+        oFile.write((char *)&obj, sizeof(lieutenant));
+    }
+    else if (post_name == "Major")
+    {
+        Major obj;
+        oFile.open("major.bin", ios::binary | ios::app);
+        obj.getter_major();
+        oFile.write((char *)&obj, sizeof(Major));
+    }
+    else
+    {
+        cout << "\nEnter correct Post-Name";
+    }
     oFile.close();
     cout << "\n\nsepoy record Has Been Created ";
     cin.ignore();
     cin.get();
 }
-void modify_sepoy(void)
+void modify_personel(string post_name)
 {
-    string sepoy_id;
-    cout << "\nEnter the Sepoy Id:";
-    cin >> sepoy_id;
     fstream fl;
-    fl.open("sepoy.bin", ios::binary | ios::in | ios::out);
-    if (!fl.is_open())
-    {
-        cout << "File could not be opened !! Press any Key to exit";
-        cin.ignore();
-        cin.get();
-        return;
-    }
-    sepoy obj;
-    fl.seekg(0, ios::beg);
+    string id;
+    cout << "\nEnter the Id:";
+    cin >> id;
     bool found = false;
-    while (!fl.eof() && found == false)
+    if (post_name == "Sepoy")
     {
-        fl.read((char *)&obj, sizeof(sepoy));
-        if (obj.ret_sep_id() == sepoy_id)
+        fl.open("sepoy.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
         {
-            obj.getter_general(); //There is some updation required like officer does not have access to change password of user.
-            int pos = (-1) * static_cast<int>(sizeof(obj));
-            fl.seekp(pos, ios::cur);
-            fl.write((char *)(&obj), sizeof(sepoy));
-            cout << "\n\n\t Record Updated";
-            found = true;
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
         }
+        sepoy obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(sepoy));
+            if (obj.ret_sep_id() == id)
+            {
+                obj.modify_sepoy(); //There is some updation required like officer does not have access to change password of user.
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(sepoy));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else if (post_name == "Lieutenant")
+    {
+        fl.open("lieu.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        lieutenant obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(lieutenant));
+            if (obj.ret_lieu_id() == id)
+            {
+                obj.modify_lieutenant(); //There is some updation required like officer does not have access to change password of user.
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(lieutenant));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else if (post_name == "Major")
+    {
+        fl.open("major.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        Major obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(Major));
+            if (obj.ret_maj_id() == id)
+            {
+                obj.modify_major(); //There is some updation required like officer does not have access to change password of user.
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(Major));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else
+    {
+        cout << "\nInvalid Post-Name...";
+        return;
     }
     fl.close();
     if (found == false)
@@ -851,36 +1318,92 @@ void modify_sepoy(void)
     cin.ignore();
     cin.get();
 }
-void delete_sepoy(void)
+void delete_personel(string post_name)
 {
-    sepoy obj;
+    string id;
+    cout << "Enter the Id: ";
+    cin >> id;
     ifstream iFile;
-    iFile.open("sepoy.bin", ios::binary | ios::in);
-    if (!iFile.is_open())
-    {
-        cout << "File could not be opened... Press any Key to exit...";
-        cin.ignore();
-        cin.get();
-        return;
-    }
     ofstream oFile;
     oFile.open("temp.bin", ios::binary | ios::out);
-    iFile.seekg(0, ios::beg);
     oFile.seekp(0, ios::beg);
-    string id;
-    cout << "Enter the Sepoy Id: ";
-    cin >> id;
-    while (iFile.read((char*)(&obj), sizeof(sepoy)))
+    if (post_name == "Sepoy")
     {
-        if (obj.ret_sep_id() != id)
+        iFile.open("sepoy.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
         {
-            oFile.write((char*)(&obj), sizeof(sepoy));
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
         }
+        iFile.seekg(0, ios::beg);
+        sepoy obj;
+        while (iFile.read((char *)(&obj), sizeof(sepoy)))
+        {
+            if (obj.ret_sep_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(sepoy));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("sepoy.bin");
+        rename("temp.bin", "sepoy.bin");
     }
-    oFile.close();
-    iFile.close();
-    remove("sepoy.bin");
-    rename("temp.bin", "sepoy.bin");
+    else if (post_name == "Lieutenant")
+    {
+        iFile.open("lieu.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
+        {
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        iFile.seekg(0, ios::beg);
+        lieutenant obj;
+        while (iFile.read((char *)(&obj), sizeof(lieutenant)))
+        {
+            if (obj.ret_lieu_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(lieutenant));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("lieu.bin");
+        rename("temp.bin", "lieu.bin");
+    }
+    else if (post_name == "Major")
+    {
+        iFile.open("major.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
+        {
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        iFile.seekg(0, ios::beg);
+        Major obj;
+        while (iFile.read((char *)(&obj), sizeof(Major)))
+        {
+            if (obj.ret_maj_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(Major));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("major.bin");
+        rename("temp.bin", "major.bin");
+    }
+    else
+    {
+        cout << "\nInvalid Post.....";
+        return;
+    }
     cout << "\n\n\tRecord Deleted ..";
     cin.ignore();
     cin.get();
