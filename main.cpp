@@ -186,7 +186,7 @@ void cds_login(void)
         cout << "\n4. War Details:";
         cout << "\nEnter your Choice: ";
         cin >> ch;
-        switch(ch)
+        switch (ch)
         {
         case 1:
         {
@@ -206,53 +206,230 @@ void cds_login(void)
             }
             break;
         }
-            case 2:
+        case 2:
+        {
+            int choice;
+            cout << "\n1. Weapon Details: ";
+            cout << "\n2. Sepoy Details: ";
+            cout << "\n3. Lieu Details:";
+            cout << "\n4. Major Details: ";
+            cout << "\n5. General Details: ";
+            cout << "\nEnter the choice: ";
+            cin >> choice;
+            if (choice == 1)
             {
-                int choice;
-                cout<<"\n1. Weapon Details: ";
-                cout<<"\n2. Sepoy Details: ";
-                cout<<"\n3. Lieu Details:";
-                cout<<"\n4. Major Details: ";
-                cout<<"\n5. General Details: ";
-                cout<<"\nEnter the choice: ";
-                cin>>choice;
-                if(choice==1)
+                // TODO
+            }
+            else if (choice == 2)
+            {
+                ifstream fl;
+                fl.open("sepoy.bin", ios::binary | ios::in);
+                if (!fl.is_open())
                 {
-                    
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
                 }
-                else if(choice==2)
+                sepoy s;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&s, sizeof(sepoy)))
                 {
-                     ifstream fl;
-                     fl.open("sepoy.bin" , ios::binary|ios::in);
-                     if(!fl.is_open())
-                     {
-                         cout<<"\nError Occured during Opening the file...";
-                         cin.ignore();
-                         cin.get();
-                     }
-                     sepoy s;
-                     fl.seekg(0 , ios::beg);
-                     while(fl.read((char*)&s , sizeof(sepoy)))
-                     {
-                         s.display_sepoy();
-                     }
-                     fl.close();
-                     cin.ignore();
-                     cin.get();
+                    s.display_sepoy();
                 }
-                else if(choice==3)
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 3)
+            {
+                ifstream fl;
+                fl.open("lieu.bin", ios::binary | ios::in);
+                if (!fl.is_open())
                 {
-                     
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
                 }
+                lieutenant l;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&l, sizeof(lieutenant)))
+                {
+                    l.display_lieutenant();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 4)
+            {
+                ifstream fl;
+                fl.open("major.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                Major m;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&m, sizeof(Major)))
+                {
+                    m.display_major();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 5)
+            {
+                ifstream fl;
+                fl.open("general.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                general g;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&g, sizeof(general)))
+                {
+                    g.display_general();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else
+            {
+                cout << "\nInvalid Operation.....";
             }
             break;
-
+        }
+        case 3:
+        {
+            int choice;
+            cout << "\n1. Weapon Details: ";
+            cout << "\n2. Aircraftman Details: ";
+            cout << "\n3. Flight Lieu Details:";
+            cout << "\n4. Squadraon Leader Details: ";
+            cout << "\n5. Chief Air Marshall Details: ";
+            cout << "\nEnter the choice: ";
+            cin >> choice;
+            if (choice == 1)
+            {
+                //TODO
+            }
+            else if (choice == 2)
+            {
+                ifstream fl;
+                fl.open("aircraftman.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                aircraftman s;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&s, sizeof(aircraftman)))
+                {
+                    s.display_aircraftman();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 3)
+            {
+                ifstream fl;
+                fl.open("flight_lieu.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                flight_lieutenant s;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&s, sizeof(flight_lieutenant)))
+                {
+                    s.display_flight_lieutenant();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 4)
+            {
+                ifstream fl;
+                fl.open("squadron_leader.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                squadron_leader s;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&s, sizeof(squadron_leader)))
+                {
+                    s.display_sqa_leader();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            else if (choice == 5)
+            {
+                ifstream fl;
+                fl.open("airchief.bin", ios::binary | ios::in);
+                if (!fl.is_open())
+                {
+                    cout << "\nError Occured during Opening the file...";
+                    cin.ignore();
+                    cin.get();
+                }
+                air_chief_marshall s;
+                fl.seekg(0, ios::beg);
+                while (fl.read((char *)&s, sizeof(air_chief_marshall)))
+                {
+                    s.display_air_chief();
+                }
+                fl.close();
+                cin.ignore();
+                cin.get();
+            }
+            break;
+        }
+        case 4:
+        {
+            ifstream fl;
+            fl.open("war.bin", ios::binary | ios::in);
+            if (!fl.is_open())
+            {
+                cout << "\nError Occured during Opening the file...";
+                cin.ignore();
+                cin.get();
+            }
+            war w;
+            fl.seekg(0, ios::beg);
+            while (fl.read((char *)&w, sizeof(war)))
+            {
+                w.display_war();
+            }
+            fl.close();
+            cin.ignore();
+            cin.get();
+        }
+        break;
         default:
+            cout<<"\nIvalid Choice....";
             break;
         }
     }
     else
-    cout<<"\nRecord not Found...";
+        cout << "\nRecord not Found...";
     file.close();
     cin.ignore();
     cin.get();
@@ -805,7 +982,7 @@ protected:
 
 public:
     //unsigned num_aircraftman();    //counts and returns the number of aircraftman in a section
-    void add_airman_to_section(aircraftman &a)  //adds a sepoys into the section whenever a sepoy is added
+    void add_airman_to_section(aircraftman &a) //adds a sepoys into the section whenever a sepoy is added
     {
         air.push_back(a);
     }
@@ -1577,7 +1754,7 @@ void add_personel(string post_name) //add the army personel into the section.bin
         fstream fptr;
         fptr.open("army_section.bin", ios::binary | ios::in | ios::out);
         int secNo = obj.ret_sepoy_sec_id();
-        int pos = (secNo - 1) * static_cast<int> (sizeof(sec_amy));
+        int pos = (secNo - 1) * static_cast<int>(sizeof(sec_amy));
         fptr.seekg(pos, ios::beg);
         fptr.read((char *)&sec_amy, sizeof(sec_amy));
         sec_amy.add_sepoy_to_section(obj);
@@ -1638,7 +1815,6 @@ void add_airforce_personel(string post_name)
         cin.ignore();
         cin.get();
         //stop ritght here
-
     }
     else if (post_name == "Flight Lieutenant")
     {
