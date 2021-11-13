@@ -16,8 +16,10 @@ using std::string;
 using std::vector;
 
 //functions used in the program
-//void add_user(void);
+void add_user(void);
+
 void main_menu();
+void add_war_details(void);
 void army_field(void);
 void sepoy_login(void);
 void lieu_login(void);
@@ -26,6 +28,21 @@ void general_login(void);
 void add_personel(string post_name);
 void modify_personel(string post_name);
 void delete_personel(string post_name);
+
+void army_personal_dashboard(void);
+
+//functions for airforce
+void add_airforce_user();
+void airforce_field();
+void air_personal_dashboard(void);
+void flight_lieu_login();
+void squad_leader_login();
+void air_chief_marshal_login();
+void aircraftman_login();
+
+//common functions
+void war_details(void);
+void display_war_history();
 
 //sepoy.bin  ||   major.bin
 //This header file contains the class definitions of all the Defence Personell Involved
@@ -45,7 +62,7 @@ public:
     }
     void display_date()
     {
-        cout << day << " - " << month << " - " << year << endl;
+        cout << day << "-" << month << "-" << year;
     }
 };
 class cds //Chief of Defence Staff    //only one object should be made
@@ -234,7 +251,7 @@ protected:
     unsigned num_tank;
     unsigned num_mortar;
     unsigned num_combat_shotgun;
-    
+
 public:
     //unsigned num_sepoys();    //counts and returns the number of sepoys in a section
     //void add_sepoy_to_section(sepoy &);  //adds a sepoys into the section whenever a sepoy is added
@@ -307,6 +324,7 @@ private:
     string general_username;
 
 public:
+    friend class cds;
     //function that he can do
     //edit or modify details of any soldier
     //add and remove any soldier
@@ -332,7 +350,6 @@ public:
     {
         return name;
     }
-    friend class cds;
 };
 
 //This header file contains the class -> section -> company -> platoon
@@ -389,14 +406,7 @@ public:
         cout << "Enter Airman Section Id: ";
         cin >> airman_section_id;
     }
-    void set_password(string pass)
-    {
-        this->password = pass;
-    }
-    string get_password()
-    {
-        return password;
-    }
+
     void display()
     {
         cout << " Name : " << name;
@@ -412,6 +422,14 @@ public:
         display();
         cout << "Section Id: " << airman_section_id;
     }
+    void set_password(string pass)
+    {
+        this->password = pass;
+    }
+    string get_password()
+    {
+        return password;
+    }
     string ret_air_id()
     {
         return aircraftman_id;
@@ -419,6 +437,21 @@ public:
     string ret_air_name()
     {
         return name;
+    }
+    void modify()
+    {
+        cout << "Enter modified Name: ";
+        cin >> name;
+        cout << "Modified Date of Birth: ";
+        date_of_birth.getter_date();
+        cout << "Modified Date of Joining: ";
+        date_of_joining.getter_date();
+    }
+    void modify_aircraftman()
+    {
+        modify();
+        cout << "Enter modified section Id: ";
+        cin >> this->airman_section_id;
     }
 };
 
@@ -444,6 +477,16 @@ public:
         aircraftman::display();
         cout << "Section Id: " << section_id;
     }
+    string ret_fli_lieu_id()
+    {
+        return flight_lieu_id;
+    }
+    void modify_flight_lieutenant()
+    {
+        aircraftman::modify();
+        cout << "Enter modified section Id: ";
+        cin >> this->section_id;
+    }
 };
 
 class squadron_leader : public flight_lieutenant //head of a squadron
@@ -467,7 +510,18 @@ public:
         cout << "Squadron Leader Id: " << squadron_leader_id;
         aircraftman::display();
         cout << "Squadron Id: " << squadron_id;
-    };
+    }
+
+    string ret_sqd_id()
+    {
+        return squadron_leader_id;
+    }
+    void modify_sqd_leader()
+    {
+        aircraftman::modify();
+        cout<<"Enter modified Squadron Id: ";
+        cin>>this->squadron_id;
+    }
 };
 
 class section_airforce
@@ -550,7 +604,10 @@ public:
 class air_chief_marshall : public squadron_leader, public section_airforce, public squadron //public command //head of airforce    //can view all the arsenal which airforce has    //can edit the details of any employee
 {
 private:
+    string air_chief_username;
+
 public:
+    friend class cds;
     void getter_air_chief_marshall();
     void display_air_chief_marshall() const;
     //function that he can do
@@ -559,18 +616,36 @@ public:
     //view all the arsenal data which army has
     //can view/modify and delete all the info related to war and conflicts
     //add functions accordingly
-    friend class cds;
+    void getter_air_chief()
+    {
+        cout << "Enter Air Chief Marshal Username:  ";
+        cin >> air_chief_username;
+        aircraftman::getter();
+    }
+    void display_air_chief()
+    {
+        cout << "\nUsername: " << air_chief_username;
+        aircraftman::display();
+    }
+    string ret_air_username()
+    {
+        return air_chief_username;
+    }
+    string ret_air_chief_name()
+    {
+        return name;
+    }
 };
 
 ///////////////war and conflict
 
-class war_conflict
+class war
 {
 private:
     date war_start_date;
     date war_end_date;
     string location;
-    string opposition;    //name of opposing country
+    string opposition; //name of opposing country
     unsigned num_our_casualties;
     unsigned num_thiers_casualties;
     unsigned expenditure;
@@ -578,26 +653,30 @@ private:
 public:
     void getter_war()
     {
-        cout << "War Beginning Date: "; ////////
+        cout << "War Beginning Date: ";
         war_start_date.getter_date();
-        cout << "War End Date: "; ////////
+        cout << "War End Date: ";
         war_end_date.getter_date();
         cout << "Enter the location where the war took place: ";
         cin >> location;
-        cout<<"Enter the name of country against which war took place: ";
-        cin>>opposition;
+        cout << "Enter the name of country against which war took place: ";
+        cin >> opposition;
         cout << "Enter the number of casualties from from our side: ";
         cin >> num_our_casualties;
         cout << "Enter the number of casualties from from opposing side: ";
         cin >> num_our_casualties;
-        cout<<"Enter our expenditure(in INR): ";
-        cin>>expenditure;
-        cout<<"Describe the result of war: ";
-        getline(cin,result);
+        cout << "Enter our expenditure(in INR): ";
+        cin >> expenditure;
+        cout << "Enter the result(win/loss): ";
+        cin >> result;
     }
     void display_war()
     {
-        
+        war_start_date.display_date();
+        cout << '\t';
+        war_end_date.display_date();
+        cout << '\t' << opposition << '\t' << location;
+        cout << '\t' << num_our_casualties << '\t' << num_thiers_casualties << '\t' << expenditure << '\t' << result << endl;
     }
 };
 
@@ -623,7 +702,7 @@ void main_menu()
             army_field();
             break;
         case 2:
-            // airforce_field();
+            airforce_field();
             break;
         case 3:
             // cds_field();
@@ -645,10 +724,6 @@ int main()
 }
 
 //for printing section-wise weapon info
-void print_weapon_info_section_wise()
-{
-    
-}
 
 //Army login
 
@@ -657,7 +732,7 @@ void army_field()
     cout << "\n\t\tMenu\n\n";
     cout << "1. Login to Personal Dashboard\n";
     cout << "2. Section-wise weapon allocation\n";
-    cout << "3. War and Conflicts\n";
+    cout << "3. War Details\n";
     cout << "4. Exit\n";
     cout << "9. Return to Previous Menu\n";
 flag5:
@@ -669,13 +744,13 @@ flag5:
     case '1':
         cout << "\n\nPersonel Dashboard Login\n";
         cout << "--------------------------------\n\n";
-        Personel_Dashboard();
+        army_personal_dashboard();
         break;
     case '2':
-        print_weapon_info_section_wise();
+        // print_weapon_info_section_wise();
         break;
     case '3':
-        //////
+        war_details(); //general login dashboard then view history and add war
         break;
     case '4':
         cout << "\nGoodbye!\n";
@@ -687,13 +762,14 @@ flag5:
     }
 }
 
-void Personel_Dashboard(void)
+void army_personal_dashboard(void)
 {
 
     int ch;
     while (true)
     {
         cout << "\n\t\tMENU\n";
+        cout<<"\n0. Add user\n";
         cout << "\n1. Sepoy login";
         cout << "\n2. Lieutenant login";
         cout << "\n3. Major login";
@@ -705,6 +781,9 @@ void Personel_Dashboard(void)
         cin >> ch;
         switch (ch)
         {
+        case 0:
+            add_user();
+            break;
         case 1:
             sepoy_login();
             break;
@@ -733,18 +812,24 @@ void add_user(void)
 {
     int choice;
     cout << "\n\t\tSELECT POST: ";
-    cout << "\n1. General-Soldier:";
+    cout << "\n1. General-Soldier:"; //sepoy
     cout << "\n2. Lieutenant";
     cout << "\n3. Major";
     cout << "\nEnter your Choice: ";
     cin >> choice;
+    int n;
+    cout << "\nEnter the number of details: ";
+    cin >> n;
     if (choice == 1)
     {
         sepoy obj;
         ofstream oFile;
         oFile.open("sepoy.bin", ios::binary | ios::app);
-        obj.getter_sepoy();
-        oFile.write((char *)&obj, sizeof(sepoy));
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_sepoy();
+            oFile.write((char *)&obj, sizeof(sepoy));
+        }
         oFile.close();
         cout << "\n\nsepoy record Has Been Created ";
         cin.ignore();
@@ -755,8 +840,11 @@ void add_user(void)
         lieutenant obj;
         ofstream oFile;
         oFile.open("lieu.bin", ios::binary | ios::app);
-        obj.getter_lieutenant();
-        oFile.write((char *)&obj, sizeof(lieutenant));
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_lieutenant();
+            oFile.write((char *)&obj, sizeof(lieutenant));
+        }
         oFile.close();
         cout << "\n\nlieutinant record Has Been Created ";
         cin.ignore();
@@ -767,8 +855,23 @@ void add_user(void)
         Major obj;
         ofstream oFile;
         oFile.open("major.bin", ios::binary | ios::app);
-        obj.getter_major();
-        oFile.write((char *)&obj, sizeof(Major));
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_major();
+            oFile.write((char *)&obj, sizeof(Major));
+        }
+        oFile.close();
+        cout << "\n\nmajor record Has Been Created ";
+        cin.ignore();
+        cin.get();
+    }
+    else if(choice == 4)
+    {
+        general obj;
+        ofstream oFile;
+        oFile.open("general.bin", ios::binary | ios::app);
+        obj.getter_general();
+        oFile.write((char *)&obj, sizeof(general));
         oFile.close();
         cout << "\n\nmajor record Has Been Created ";
         cin.ignore();
@@ -970,7 +1073,6 @@ void lieu_login(void)
     cin.ignore();
     cin.get();
 }
-
 void major_login()
 {
     string major_id;
@@ -1113,7 +1215,7 @@ void general_login(void)
     {
         if (obj.ret_gene_username() == general_usrnme && obj.get_password() == password)
         {
-            obj.general::display_general(); ////////obj.display_general
+            //obj.general::display_general();
             found = true;
             break;
         }
@@ -1222,6 +1324,39 @@ void add_personel(string post_name)
     cin.ignore();
     cin.get();
 }
+void add_airforce_personel(string post_name)
+{
+    ofstream oFile;
+    if (post_name == "Aircraftman")
+    {
+        aircraftman obj;
+        oFile.open("aircraftman.bin", ios::binary | ios::app);
+        obj.getter_aircraftsman();
+        oFile.write((char *)&obj, sizeof(aircraftman));
+    }
+    else if (post_name == "Flight Lieutenant")
+    {
+        flight_lieutenant obj;
+        oFile.open("flight_lieu.bin", ios::binary | ios::app);
+        obj.getter_flight_lieutenant();
+        oFile.write((char *)&obj, sizeof(flight_lieutenant));
+    }
+    else if (post_name == "Squadron Leader")
+    {
+        squadron_leader obj;
+        oFile.open("squadron_leader.bin", ios::binary | ios::app);
+        obj.getter_squadron_leader();
+        oFile.write((char *)&obj, sizeof(Major));
+    }
+    else
+    {
+        cout << "\nEnter correct Post-Name";
+    }
+    oFile.close();
+    cout << "\n\nRecord Has Been Created ";
+    cin.ignore();
+    cin.get();
+}
 void modify_personel(string post_name)
 {
     fstream fl;
@@ -1318,6 +1453,105 @@ void modify_personel(string post_name)
     cin.ignore();
     cin.get();
 }
+
+void modify_airforce_personel(string post_name)
+{
+    fstream fl;
+    string id;
+    cout << "\nEnter the Id:";
+    cin >> id;
+    bool found = false;
+    if (post_name == "Aircraftman")
+    {
+        fl.open("aircraftman.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        aircraftman obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(aircraftman));
+            if (obj.ret_air_id() == id)
+            {
+                obj.modify_aircraftman(); //There is some updation required like officer does not have access to change password of user.
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(aircraftman));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else if (post_name == "Flight Lieutenant")
+    {
+        fl.open("flight_lieu.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        flight_lieutenant obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(lieutenant));
+            if (obj.ret_fli_lieu_id() == id)
+            {
+                obj.modify_flight_lieutenant(); //There is some updation required like officer does not have access to change password of user.
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(flight_lieutenant));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else if (post_name == "Squadron Leader")
+    {
+        fl.open("squadron_leader.bin", ios::binary | ios::in | ios::out);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        squadron_leader obj;
+        fl.seekg(0, ios::beg);
+        while (!fl.eof() && found == false)
+        {
+            fl.read((char *)&obj, sizeof(Major));
+            if (obj.ret_sqd_id() == id)
+            {
+                obj.modify_sqd_leader();
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                fl.seekp(pos, ios::cur);
+                fl.write((char *)(&obj), sizeof(Major));
+                cout << "\n\n\t Record Updated";
+                found = true;
+            }
+        }
+    }
+    else
+    {
+        cout << "\nInvalid Post-Name...";
+        return;
+    }
+    fl.close();
+    if (found == false)
+        cout << "\n\n Record Not Found ";
+    cin.ignore();
+    cin.get();
+}
+
+
 void delete_personel(string post_name)
 {
     string id;
@@ -1408,3 +1642,868 @@ void delete_personel(string post_name)
     cin.ignore();
     cin.get();
 }
+
+// void delete_airforce_personel(string post_name)
+// {
+//     string id;
+//     cout << "Enter the Id: ";
+//     cin >> id;
+//     ifstream iFile;
+//     ofstream oFile;
+//     oFile.open("temp.bin", ios::binary | ios::out);
+//     oFile.seekp(0, ios::beg);
+//     if (post_name == "Sepoy")
+//     {
+//         iFile.open("sepoy.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         sepoy obj;
+//         while (iFile.read((char *)(&obj), sizeof(sepoy)))
+//         {
+//             if (obj.ret_sep_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(sepoy));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("sepoy.bin");
+//         rename("temp.bin", "sepoy.bin");
+//     }
+//     else if (post_name == "Lieutenant")
+//     {
+//         iFile.open("lieu.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         lieutenant obj;
+//         while (iFile.read((char *)(&obj), sizeof(lieutenant)))
+//         {
+//             if (obj.ret_lieu_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(lieutenant));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("lieu.bin");
+//         rename("temp.bin", "lieu.bin");
+//     }
+//     else if (post_name == "Major")
+//     {
+//         iFile.open("major.bin", ios::binary | ios::in);
+//         if (!iFile.is_open())
+//         {
+//             cout << "File could not be opened... Press any Key to exit...";
+//             cin.ignore();
+//             cin.get();
+//             return;
+//         }
+//         iFile.seekg(0, ios::beg);
+//         Major obj;
+//         while (iFile.read((char *)(&obj), sizeof(Major)))
+//         {
+//             if (obj.ret_maj_id() != id)
+//             {
+//                 oFile.write((char *)(&obj), sizeof(Major));
+//             }
+//         }
+//         oFile.close();
+//         iFile.close();
+//         remove("major.bin");
+//         rename("temp.bin", "major.bin");
+//     }
+//     else
+//     {
+//         cout << "\nInvalid Post.....";
+//         return;
+//     }
+//     cout << "\n\n\tRecord Deleted ..";
+//     cin.ignore();
+//     cin.get();
+// }
+void add_war_details(void)
+{
+    ofstream file;
+    file.open("war.bin", ios::binary | ios::app);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened... Press any Key to exit...";
+        cin.ignore();
+        cin.get();
+        return;
+    }
+    int n;
+    war obj;
+    cout << "\nHow many Details you want to enter: ";
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        obj.getter_war();
+        file.write((char *)&obj, sizeof(war));
+    }
+    file.close();
+    cin.ignore();
+    cin.get();
+}
+void war_details(void)
+{
+    string username;
+    string password;
+    cout << "\nEnter Username: ";
+    cin >> username;
+    cout << "\nEnter Password: ";
+    cin >> password;
+    ifstream file;
+    file.open("general.bin", ios::binary | ios::in);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened... Press any Key to exit...";
+        cin.ignore();
+        cin.get();
+        return;
+    }
+    file.seekg(0, ios::beg);
+    general obj;
+    bool found = false;
+    while (!file.eof() && found == false)
+    {
+        file.read((char *)&obj, sizeof(general));
+        if (obj.ret_gene_username() == username && obj.ret_gene_username() == password)
+        {
+            found = true;
+            obj.display_general();
+            break;
+        }
+    }
+    file.close();
+    if (found)
+    {
+        int choice;
+        cout << "\nChoose the Below Options: ";
+        cout << "\n1. View War History";
+        cout << "\n2. Add War Details";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+        {
+            ifstream fl;
+            fl.open("war.bin", ios::binary | ios::in);
+            if (!fl.is_open())
+            {
+                cout << "File could not be opened... Press any Key to exit...";
+                cin.ignore();
+                cin.get();
+                return;
+            }
+            war obj;
+            fl.seekg(0, ios::beg);
+            while (fl.read((char *)&obj, sizeof(war)))
+            {
+                obj.display_war();
+            }
+            fl.close();
+            cin.ignore();
+            cin.get();
+        }
+        break;
+        case 2:
+        break;
+        default:
+        
+        }
+    }
+}
+        
+void delete_personel(string post_name)
+{
+    string id;
+    cout << "Enter the Id: ";
+    cin >> id;
+    ifstream iFile;
+    ofstream oFile;
+    oFile.open("temp.bin", ios::binary | ios::out);
+    oFile.seekp(0, ios::beg);
+    if (post_name == "Sepoy")
+    {
+        iFile.open("sepoy.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
+        {
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        iFile.seekg(0, ios::beg);
+        sepoy obj;
+        while (iFile.read((char *)(&obj), sizeof(sepoy)))
+        {
+            if (obj.ret_sep_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(sepoy));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("sepoy.bin");
+        rename("temp.bin", "sepoy.bin");
+    }
+    else if (post_name == "Lieutenant")
+    {
+        iFile.open("lieu.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
+        {
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        iFile.seekg(0, ios::beg);
+        lieutenant obj;
+        while (iFile.read((char *)(&obj), sizeof(lieutenant)))
+        {
+            if (obj.ret_lieu_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(lieutenant));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("lieu.bin");
+        rename("temp.bin", "lieu.bin");
+    }
+    else if (post_name == "Major")
+    {
+        iFile.open("major.bin", ios::binary | ios::in);
+        if (!iFile.is_open())
+        {
+            cout << "File could not be opened... Press any Key to exit...";
+            cin.ignore();
+            cin.get();
+            return;
+        }
+        iFile.seekg(0, ios::beg);
+        Major obj;
+        while (iFile.read((char *)(&obj), sizeof(Major)))
+        {
+            if (obj.ret_maj_id() != id)
+            {
+                oFile.write((char *)(&obj), sizeof(Major));
+            }
+        }
+        oFile.close();
+        iFile.close();
+        remove("major.bin");
+        rename("temp.bin", "major.bin");
+    }
+    else
+    {
+        cout << "\nInvalid Post.....";
+        return;
+    }
+    cout << "\n\n\tRecord Deleted ..";
+    cin.ignore();
+    cin.get();
+}       {
+            ofstream fl;
+            fl.open("war.bin", ios::binary | ios::app);
+            if (!fl.is_open())
+            {
+                cout << "File could not be opened... Press any Key to exit...";
+                cin.ignore();
+                cin.get();
+                return;
+            }
+            war obj;
+            obj.getter_war();
+            fl.write((char *)&obj, sizeof(war));
+            fl.close();
+            cin.ignore();
+            cin.get();
+        }
+        break;
+        default:
+            cout << "\nEnter correct choice...";
+            break;
+        }
+    }
+}
+
+void airforce_field()
+{
+    cout << "\n\t\tMenu\n\n";
+    cout << "1. Login to Personal Dashboard\n";
+    cout << "2. Section-wise weapon allocation\n";
+    cout << "3. War Details\n";
+    cout << "4. Exit\n";
+    cout << "9. Return to Previous Menu\n";
+flag5:
+    cout << "\n\nEnter your choice: ";
+    char choice;
+    cin >> choice;
+    switch (choice)
+    {
+    case '1':
+        cout << "\n\nArmy Personal Dashboard Login\n";
+        cout << "--------------------------------\n\n";
+        air_personal_dashboard();
+        break;
+    case '2':
+        //
+        break;
+    case '3':
+        war_details(); //general login dashboard then view history and add war
+        break;
+    case '4':
+        cout << "\nGoodbye!\n";
+        exit(0);
+        break;
+    default:
+        cout << "Error: Invalid Choice Selection" << endl;
+        goto flag5;
+    }
+}
+
+void air_personal_dashboard(void)
+{
+    char ch;
+    while (true)
+    {
+        cout << "\n\t\tMENU\n";
+        cout << "\n1. Aircraftman login";
+        cout << "\n2. Flight Lieutenant login";
+        cout << "\n3. Squadron Leader login";
+        cout << "\n4. Airforce Cheif Marshal login";
+        cout << "\n5. Exit";
+        cout << "\n9. Return to Previous menu";
+    flag6:
+        cout << "\nEnter your choice: ";
+        cin >> ch;
+        switch (ch)
+        {
+        case '1':
+            aircraftman_login();
+            break;
+        case '2':
+            flight_lieu_login();
+            break;
+        case '3':
+            squad_leader_login();
+            break;
+        case '4':
+            air_chief_marshal_login();
+        case '5':
+            cout << "Goodbye";
+            exit(0);
+        case '9':
+            cout << "Going back to previous menu..." << endl;
+            airforce_field();
+            break;
+        default:
+            cout << "Error: Invalid Choice Selection\n\n";
+            goto flag6;
+        }
+    }
+}
+
+void add_airforce_user(void)
+{
+    int choice;
+    cout << "\n\t\tSELECT POST: ";
+    cout << "\n1. Aircraftman:";
+    cout << "\n2. Flight Lieutenant";
+    cout << "\n3. Squadron Leader";
+    cout << "\n4. Air Chief Marshall";
+    cout << "\nEnter your Choice: ";
+    cin >> choice;
+    int n;
+    cout << "\nEnter the number of details: ";
+    cin >> n;
+    if (choice == 1)
+    {
+        aircraftman obj;
+        ofstream oFile;
+        oFile.open("aircraftman.bin", ios::binary | ios::app);
+        for (int i = 0; i < n; i++)
+        {
+            obj.getter_aircraftsman();
+            oFile.write((char *)&obj, sizeof(aircraftman));
+        }
+        oFile.close();
+        cout << "\n\nAircraftman record Has Been Created ";
+        cin.ignore();
+        cin.get();
+    }
+    else if (choice == 2)
+    {
+        flight_lieutenant obj;
+        ofstream oFile;
+        oFile.open("flight_lieu.bin", ios::binary | ios::app);
+        for(int i = 0; i<n; i++)
+        {    
+        obj.getter_flight_lieutenant();
+        oFile.write((char *)&obj, sizeof(flight_lieutenant));
+        }
+        oFile.close();
+        cout << "\n\nflight lieutinant record Has Been Created ";
+        cin.ignore();
+        cin.get();
+    }
+    else if (choice == 3)
+    {
+        squadron_leader obj;
+        ofstream oFile;
+        oFile.open("squadron_leader.bin", ios::binary | ios::app);
+        for(int i = 0; i<n; i++)
+        {    
+        obj.getter_squadron_leader();
+        oFile.write((char *)&obj, sizeof(squadron_leader)); 
+        }
+        oFile.close();
+        cout << "\nSquadron Leader record Has Been Created ";
+        cin.ignore();
+        cin.get();
+    }
+    else if (choice == 4)
+    {
+        air_chief_marshall obj;
+        ofstream oFile;
+        oFile.open("airchief.bin", ios::binary | ios::app);
+        obj.getter_air_chief();
+        oFile.write((char *)&obj, sizeof(air_chief_marshall));
+        oFile.close();
+        cout << "\nAir Cheif Marshal record has Been Created\n ";
+        cin.ignore();
+        cin.get();
+    }
+    else
+        cout << "\nEnter correct choice" << endl;
+}
+
+void aircraftman_login(void)
+{
+    string aircraftman_id;
+    string password;
+    cout << "\nEnter aircraftman Id: ";
+    cin >> aircraftman_id;
+    cout << "\nEnter the Password: ";
+    cin >> password;
+    fstream file; //read mode
+    file.open("aircraftman.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get(); //////////handle here correctly
+        return;
+    }
+    file.seekg(0, ios::beg);
+    aircraftman obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(aircraftman)))
+    {
+        if (obj.ret_air_id() == aircraftman_id && obj.get_password() == password)
+        {
+            //obj.display_sepoy();
+            found = true;
+            cout << "OPTIONS\n";
+            cout << "1. View your Profile\n";
+            cout << "2. Change your password\n";
+            cout << "Enter your choice: ";
+            int choice;
+            cin >> choice;
+            if (choice == 1)
+            {
+                obj.display_aircraftman();
+                cout << "Enter any key to continue...";
+                cin.get();
+            }
+            else if (choice == 2)
+            {
+                cout << "Enter your current password: ";
+                string pass1;
+                cin >> pass1;
+                if (pass1 == obj.get_password())
+                {
+                    cout << "Enter the new password: ";
+                    cin >> pass1;
+                    // change_pass_sepoy(obj.ret_sep_id(), pass1, "Sepoy");
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)&(obj), sizeof(aircraftman));
+                    cout << "\nPassword Changed Successfully!" << endl;
+                }
+            }
+            break;
+            // break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Incorrect Password or Record not found in database\n";
+    }
+    file.close();
+    airforce_field();
+    // if (found)
+    // {
+    //     string new_password;
+    //     cout << "\nWant to change password: ";
+    //     char ch;
+    //     cin>>ch;
+    //     cin >> new_password;
+    //     change_pass(sepoy_id, new_password);
+    // }
+    // else
+    // cout << "\nRecords not found!!";
+    cin.ignore();
+    cin.get();
+}
+
+void flight_lieu_login()
+{
+    string flight_lieu_id;
+    string password;
+    cout << "\nEnter Flight Lieutenant Id: ";
+    cin >> flight_lieu_id;
+    cout << "\nEnter the Password: ";
+    cin >> password;
+    fstream file; //opening in read mode
+    file.open("flight_lieu.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get(); /////handle here correctly
+        return;
+    }
+    file.seekg(0, ios::beg); //setting the file pointer at the beginning of file
+    flight_lieutenant obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(flight_lieutenant)))
+    {
+        if (obj.ret_fli_lieu_id() == flight_lieu_id && obj.get_password() == password)
+        {
+            //obj.display_sepoy();
+            found = true;
+            cout << "OPTIONS\n";
+            cout << "1. View your Profile\n";
+            cout << "2. Change your password\n";
+            cout << "Enter your choice: ";
+            int choice;
+            cin >> choice;
+            if (choice == 1)
+            {
+                obj.display_flight_lieutenant();
+                cout << "Enter any key to continue...";
+                cin.get();
+            }
+            else if (choice == 2)
+            {
+                cout << "Enter your current password: ";
+                string pass1;
+                cin >> pass1;
+                if (pass1 == obj.get_password())
+                {
+                    cout << "Enter the new password: ";
+                    cin >> pass1;
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)(&obj), sizeof(flight_lieutenant));
+                    //change_pass_sepoy(obj.ret_sep_id(), pass1);
+                    cout << "\nPassword Changed Successfully!" << endl;
+                }
+            }
+            break;
+            // break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Incorrect Password or Record not found in database\n";
+    }
+    file.close();
+    army_field();
+    // if (found)
+    // {
+    //     string new_password;
+    //     cout << "\nWant to change password: ";
+    //     char ch;
+    //     cin>>ch;
+    //     cin >> new_password;
+    //     change_pass(sepoy_id, new_password);
+    // }
+    // else
+    // cout << "\nRecords not found!!";
+    cin.ignore();
+    cin.get();
+}
+
+// void change_pass_sepoy(string id, string password)
+// {
+//     bool found = false;
+//     sepoy obj;
+//     fstream fl;
+//     fl.open("sepoy.bin", ios::binary | ios::in | ios::out);
+//     if (!fl.is_open())
+//     {
+//         cout << "File could not be opened. Press any Key to exit...";
+//         cin.ignore();
+//         cin.get();
+//         return; /////////////////handle here correctly
+//     }
+//     fl.seekg(0, ios::beg);
+//     while (!fl.eof() && found == false)
+//     {
+//         fl.read((char *)(&obj), sizeof(sepoy));
+//         if (obj.ret_sep_id() == id)
+//         {
+//             obj.set_password(password);
+//             int pos = (-1) * static_cast<int>(sizeof(obj));
+//             fl.seekp(pos, ios::cur);
+//             fl.write((char *)(&obj), sizeof(sepoy));
+//             cout << "\n\n\t Record Updated";
+//             found = true;
+//         }
+//     }
+//     fl.close();
+//     if (found == false)
+//         cout << "\n\n Record Not Found ";
+//     cin.ignore();
+//     cin.get();
+// }
+
+void squad_leader_login()
+{
+    string squadron_leader_id;
+    string password;
+    cout << "\nEnter Squadron Leader ID: ";
+    cin >> squadron_leader_id;
+    cout << "\nEnter the password ";
+    cin >> password;
+    fstream file; //opening in read mode
+    file.open("squadron_leader.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get(); /////handle here correctly
+        return;
+    }
+    file.seekg(0, ios::beg); //setting the file pointer at the beginning of file
+    squadron_leader obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(squadron_leader)))
+    {
+        if (obj.ret_sqd_id() == squadron_leader_id && obj.get_password() == password)
+        {
+            //obj.display_sepoy();
+            found = true;
+            cout << "OPTIONS\n";
+            cout << "1. View your Profile\n";
+            cout << "2. Change your password\n";
+            cout << "Enter your choice: ";
+            int choice;
+            cin >> choice;
+            if (choice == 1)
+            {
+                obj.display_sqa_leader();
+                cout << "Enter any key to continue...";
+                cin.get();
+            }
+            else if (choice == 2)
+            {
+                cout << "Enter your current password: ";
+                string pass1;
+                cin >> pass1;
+                if (pass1 == obj.get_password())
+                {
+                    cout << "Enter the new password: ";
+                    cin >> pass1;
+                    obj.set_password(pass1);
+                    int pos = (-1) * static_cast<int>(sizeof(obj));
+                    file.seekp(pos, ios::cur);
+                    file.write((char *)(&obj), sizeof(squadron_leader));
+                    cout << "\n\n\tRecord Updated\n";
+                    //change_pass_sepoy(obj.ret_sep_id(), pass1);
+                    cout << "\nPassword Changed Successfully!" << endl;
+                }
+            }
+            break;
+            // break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Incorrect Password or Record not found in database\n";
+    }
+    file.close();
+    airforce_field();
+    // if (found)
+    // {
+    //     string new_password;
+    //     cout << "\nWant to change password: ";
+    //     char ch;
+    //     cin>>ch;
+    //     cin >> new_password;
+    //     change_pass(sepoy_id, new_password);
+    // }
+    // else
+    // cout << "\nRecords not found!!";
+    cin.ignore();
+    cin.get();
+}
+
+void air_chief_marshal_login(void)
+{
+    cout << "\n\n\tWelcome to Air Chief Marshal login\n";
+    cout << "   ----------------------------------\n\n";
+    string air_cheif_usrnme;
+    string password;
+    cout << "\nEnter the username: ";
+    cin >> air_cheif_usrnme;
+    cout << "\nEnter the Password: ";
+    cin >> password;
+    fstream file;
+    file.open("airchief.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get();
+        return;
+    }
+    file.seekg(0, ios::beg);
+    air_chief_marshall obj;
+    bool found = false;
+    while (file.read((char *)&obj, sizeof(air_chief_marshall)))
+    {
+        if (obj.ret_air_username() == air_cheif_usrnme && obj.get_password() == password)
+        {
+            //obj.air_chief_marshall::display_air_chief_marshall(); ////////obj.display_general
+            found = true;
+            break;
+        }
+    }
+    if (found)
+    {
+        char choice;
+        cout << "\nSelect an Operation Listed Below:";
+        cout << "\na. View your Profile";
+        cout << "\nb. Update your Password\n";
+        cout << "\n1. Add a Personel";
+        cout << "\n2. Modify detail(s) of a Personel: ";
+        cout << "\n3. Remove a Personel: ";
+        cout << "\n\nEnter your Choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 'a':
+            obj.display_air_chief();
+            cout << "\n\nEnter any key to continue...";
+            cin.get();
+            break;
+        case 'b':
+        {
+            cout << "\nEnter your current password: ";
+            string pass1;
+            cin >> pass1;
+            if (pass1 == obj.get_password()) //password is same variable for both sepoy and general
+            {
+                cout << "Enter the new password: ";
+                cin >> pass1;
+                obj.set_password(pass1);
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                file.seekp(pos, ios::cur);
+                file.write((char *)&(obj), sizeof(air_chief_marshall));
+                // change_passwd_general(obj.ret_gene_username(), pass1);
+                cout << "\nPassword Changed Successfully!" << endl;
+            }
+        }
+        break;
+        case '1':
+        {
+            string post_name;
+            cout << "\nWhom to add(Aircraftman/Flight Lieutenant/Squadron Leader)";
+            cin >> post_name;
+            add_personel(post_name);
+            break;
+        }
+        case '2':
+        {
+            string post_name;
+            cout << "\nWhom to modify(Aircraftman/Flight Lieutenant/Squadron Leader)";
+            cin >> post_name;
+            modify_personel(post_name);
+            break;
+        }
+        case '3':
+        {
+            string post_name;
+            cout << "\nWhom to remove(Aircraftman/Flight Lieutenant/Squadron Leader)";
+            cin >> post_name;
+            delete_personel(post_name);
+            break;
+        }
+        default:
+            cout << "\nEnter correct choice...";
+            break;
+        }
+    }
+    else
+        cout << "\nRecord not found!!";
+    file.close();
+    cin.ignore();
+    cin.get();
+}
+
+// void change_passwd_general(string usrnme, string password)
+// {
+//     bool found = false;
+//     general obj;
+//     fstream fl;
+//     fl.open("general.bin", ios::binary | ios::in | ios::out);
+//     if (!fl.is_open())
+//     {
+//         cout << "General Information could not be fetched\n";
+//         cout << "Error: File could not be opened.\n";
+//         cout << "Press any Key to exit..."; //////
+//         cin.ignore();
+//         cin.get();
+//         return;
+//     }
+//     fl.seekg(0, ios::beg);
+//     while (!fl.eof() && found == false)
+//     {
+//         fl.read((char *)(&obj), sizeof(general));
+//         if (obj.ret_gene_username() == usrnme)
+//         {
+//             obj.set_password(password);
+//             int pos = (-1) * static_cast<int>(sizeof(obj));
+//             fl.seekp(pos, ios::cur);
+//             fl.write((char *)(&obj), sizeof(general));
+//             cout << "\n\n\t Record Updated";
+//             found = true;
+//         }
+//     }
+//     fl.close();
+//     if (found == false)
+//         cout << "\n\n Record Not Found ";
+//     cin.ignore();
+//     cin.get();
+// }
+
