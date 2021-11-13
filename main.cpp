@@ -1,7 +1,7 @@
 
 //company a contains sec1 and sec 2
 //company b contains sec 3 and sec 4
-
+//we have to make function to initialize --> army_section.bin file with the weapons and soldiers.
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -31,17 +31,19 @@ void general_login(void);
 void add_personel(string post_name);
 void modify_personel(string post_name);
 void delete_personel(string post_name);
-
 void army_personal_dashboard(void);
 
 //functions for airforce
-void add_airforce_user();
+void add_airforce_user(); //for temporary adding airforce personel
+void add_airforce_personel(string post_name);
 void airforce_field();
 void air_personal_dashboard(void);
 void flight_lieu_login();
 void squad_leader_login();
 void air_chief_marshal_login();
 void aircraftman_login();
+void modify_airforce_personel(string post_name);
+void delete_airforce_personel(string post_name);
 
 //common functions
 void war_details(void);
@@ -70,11 +72,191 @@ public:
 };
 class cds //Chief of Defence Staff    //only one object should be made
 {
-    //he can view everything
-    void display_personel(); //he can view army /airforce as he chooses
-    void display_weapons();  //he can view army/ airforce weapons as he chooses
+    //he can view everythin
+private:
+    string cds_id;
+    string name;
+    string username;
+    string password;
+    date date_of_birth;   //containership  //age can be calculated by this
+    date date_of_joining; //containership
+public:
+    void getter_cds()
+    {
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter Name: ";
+        cin >> name;
+        cout << "Date of Birth:  ";
+        date_of_birth.getter_date();
+        cout << "Date of Joining: ";
+        date_of_joining.getter_date();
+    flag1:
+        cout << "Set your password:\n";
+        cout << "Enter new password: ";
+        string pass1, pass2;
+        cin >> pass1;
+        cout << "Confirm new password: ";
+        cin >> pass2;
+        if (pass1 == pass2)
+        {
+            this->password = pass1;
+        }
+        else
+        {
+            cout << "\nPassword Not Matched\n";
+            goto flag1;
+        }
+    }
+    void display_cds()
+    {
+        cout << " Name : " << name;
+        cout << " Date Of Birth : ";
+        date_of_birth.display_date();
+        cout << " Date Of Joining : ";
+        date_of_joining.display_date();
+    }
+    string ret_username_cds(void)
+    {
+        return username;
+    }
+    void set_password_cds(string pass)
+    {
+        this->password = pass;
+    }
+    string ret_password_cds(void)
+    {
+        return password;
+    }
 };
+void add_cds_details(void)
+{
+    ofstream file;
+    file.open("cds.bin", ios::binary | ios::app);
+    if (!file.is_open())
+    {
+        cout << "\nFile cannot be opened....";
+        cin.ignore();
+        cin.get();
+        return;
+    }
+    cds obj;
+    obj.getter_cds();
+    file.write((char *)&obj, sizeof(cds));
+    cout << "\nImfomation stored successfully...";
+    file.close();
+    cin.ignore();
+    cin.get();
+}
+void cds_login(void)
+{
+    string username;
+    string password;
+    cout << "\nEnter Username: ";
+    cin >> username;
+    cout << "\nEnter Password: ";
+    cin >> password;
+    fstream file;
+    file.open("cds.bin", ios::binary | ios::in | ios::out);
+    if (!file.is_open())
+    {
+        cout << "\nError Occured in Opening the file...";
+        cin.ignore();
+        cin.get();
+    }
+    bool found = false;
+    cds obj;
+    file.seekg(0, ios::beg);
+    while (!file.eof() && found == false)
+    {
+        file.read((char *)&obj, sizeof(cds));
+        if (obj.ret_username_cds() == username && obj.ret_username_cds() == password)
+        {
+            found = true;
+            obj.display_cds();
+            break;
+        }
+    }
+    if (found)
+    {
+        int ch;
+        cout << "\n1. Password Change: ";
+        cout << "\n2. Army: ";
+        cout << "\n3. Airforce";
+        cout << "\n4. War Details:";
+        cout << "\nEnter your Choice: ";
+        cin >> ch;
+        switch(ch)
+        {
+        case 1:
+        {
+            cout << "Enter your current password: ";
+            string pass1;
+            cin >> pass1;
+            if (pass1 == obj.ret_password_cds())
+            {
+                cout << "Enter the new password: ";
+                cin >> pass1;
+                // change_pass_sepoy(obj.ret_sep_id(), pass1, "Sepoy");
+                obj.set_password_cds(pass1);
+                int pos = (-1) * static_cast<int>(sizeof(obj));
+                file.seekp(pos, ios::cur);
+                file.write((char *)&(obj), sizeof(cds));
+                cout << "\nPassword Changed Successfully!" << endl;
+            }
+            break;
+        }
+            case 2:
+            {
+                int choice;
+                cout<<"\n1. Weapon Details: ";
+                cout<<"\n2. Sepoy Details: ";
+                cout<<"\n3. Lieu Details:";
+                cout<<"\n4. Major Details: ";
+                cout<<"\n5. General Details: ";
+                cout<<"\nEnter the choice: ";
+                cin>>choice;
+                if(choice==1)
+                {
+                    
+                }
+                else if(choice==2)
+                {
+                     ifstream fl;
+                     fl.open("sepoy.bin" , ios::binary|ios::in);
+                     if(!fl.is_open())
+                     {
+                         cout<<"\nError Occured during Opening the file...";
+                         cin.ignore();
+                         cin.get();
+                     }
+                     sepoy s;
+                     fl.seekg(0 , ios::beg);
+                     while(fl.read((char*)&s , sizeof(sepoy)))
+                     {
+                         s.display_sepoy();
+                     }
+                     fl.close();
+                     cin.ignore();
+                     cin.get();
+                }
+                else if(choice==3)
+                {
+                     
+                }
+            }
+            break;
 
+        default:
+            break;
+        }
+    }
+    else
+    cout<<"\nRecord not Found...";
+    file.close();
+    cin.ignore();
+    cin.get();
+}
 class sepoy
 {
 private:
@@ -122,8 +304,8 @@ public:
         cout << "Enter Sepoy Id: ";
         cin >> sepoy_id;
         getter();
-        cout << "Enter Section Id: ";
-        cin >> sepoy_section_id;
+        cout << "Enter Section Id(sec1 to sec6): "; //there are 6 sections from sec1 to sec6. This means there should be only 6 objects created into the section.bin file
+        cin >> sepoy_section_id;                    //sec1, sec2, sec3, ..., sec6
     }
     void set_password(string pass)
     {
@@ -141,8 +323,23 @@ public:
     {
         return name;
     }
-
-    void modify() ////////////why it is here?
+    int ret_sepoy_sec_id()
+    {
+        if (sepoy_section_id == "sec1")
+            return 1;
+        else if (sepoy_section_id == "sec2")
+            return 2;
+        else if (sepoy_section_id == "sec3")
+            return 3;
+        else if (sepoy_section_id == "sec4")
+            return 4;
+        else if (sepoy_section_id == "sec5")
+            return 5;
+        else if (sepoy_section_id == "sec6")
+            return 6;
+        return -1;
+    }
+    void modify()
     {
         cout << "Enter modified Name: ";
         cin >> name;
@@ -243,7 +440,7 @@ public:
         cin >> this->company_id;
     }
 };
-void add_sepoy_to_section_(sepoy &s) 
+/*void add_sepoy_to_section_(sepoy &s) 
 {
     ofstream file;
     file.open("section.bin", ios::binary | ios::app);
@@ -274,7 +471,7 @@ void add_sepoy_to_section_(sepoy &s)
     file.close();
     cin.ignore();
     cin.get();
-}
+}*/
 class section_army
 {
 protected:
@@ -288,7 +485,10 @@ protected:
 
 public:
     //unsigned num_sepoys();    //counts and returns the number of sepoys in a section
-    //void add_sepoy_to_section(sepoy &);  //adds a sepoys into the section whenever a sepoy is added
+    void add_sepoy_to_section(sepoy &s) //adds a sepoys into the required section
+    {
+        sep.push_back(s);
+    }
     //void remove_sepoy_from_section(sepoy &);
 
     void getter_section_army(sepoy &s)
@@ -327,7 +527,7 @@ public:
         cout << "No. of Mortars: " << num_mortar << endl;
         cout << "No. of Combat Shotguns: " << num_combat_shotgun << endl;
     }
-}sec1,sec2,sec3,sec4;
+};
 
 // // class company
 // // {
@@ -490,6 +690,22 @@ public:
     {
         return name;
     }
+    int ret_aircraftman_sec_id()
+    {
+        if (airman_section_id == "sec1")
+            return 1;
+        else if (airman_section_id == "sec2")
+            return 2;
+        else if (airman_section_id == "sec3")
+            return 3;
+        else if (airman_section_id == "sec4")
+            return 4;
+        else if (airman_section_id == "sec5")
+            return 5;
+        else if (airman_section_id == "sec6")
+            return 6;
+        return -1;
+    }
     void modify()
     {
         cout << "Enter modified Name: ";
@@ -589,7 +805,10 @@ protected:
 
 public:
     //unsigned num_aircraftman();    //counts and returns the number of aircraftman in a section
-    //void add_aircraftman_to_section(sepoy &);  //adds a sepoys into the section whenever a sepoy is added
+    void add_airman_to_section(aircraftman &a)  //adds a sepoys into the section whenever a sepoy is added
+    {
+        air.push_back(a);
+    }
     //void remove_aircraftman_from_section(sepoy &);
     void print_section_info()
     {
@@ -1343,7 +1562,7 @@ void general_login(void)
     cin.ignore();
     cin.get();
 }
-void add_personel(string post_name)
+void add_personel(string post_name) //add the army personel into the section.bin and seopy.bin
 {
     ofstream oFile;
     if (post_name == "Sepoy")
@@ -1352,6 +1571,23 @@ void add_personel(string post_name)
         oFile.open("sepoy.bin", ios::binary | ios::app);
         obj.getter_sepoy();
         oFile.write((char *)&obj, sizeof(sepoy));
+        //adding that object into the section.bin file depending upon the section of the sepoy
+        //stop right here
+        section_army sec_amy; //object to change the details in the section_army.bin file
+        fstream fptr;
+        fptr.open("army_section.bin", ios::binary | ios::in | ios::out);
+        int secNo = obj.ret_sepoy_sec_id();
+        int pos = (secNo - 1) * static_cast<int> (sizeof(sec_amy));
+        fptr.seekg(pos, ios::beg);
+        fptr.read((char *)&sec_amy, sizeof(sec_amy));
+        sec_amy.add_sepoy_to_section(obj);
+        pos = (-1) * sizeof(sec_amy);
+        fptr.seekg(pos, ios::cur);
+        fptr.write((char *)&sec_amy, sizeof(sec_amy));
+        fptr.close();
+        cin.ignore();
+        cin.get();
+        //stop right here
     }
     else if (post_name == "Lieutenant")
     {
@@ -1385,6 +1621,24 @@ void add_airforce_personel(string post_name)
         oFile.open("aircraftman.bin", ios::binary | ios::app);
         obj.getter_aircraftsman();
         oFile.write((char *)&obj, sizeof(aircraftman));
+
+        //stop right here
+        section_airforce sec_air; //object to change the details in the section_army.bin file
+        fstream fptr;
+        fptr.open("airforce_section.bin", ios::binary | ios::in | ios::out);
+        int secNo = obj.ret_aircraftman_sec_id();
+        long pos = (secNo - 1) * sizeof(sec_air);
+        fptr.seekg(pos, ios::beg);
+        fptr.read((char *)&sec_air, sizeof(sec_air));
+        sec_air.add_airman_to_section(obj);
+        pos = (-1) * sizeof(sec_air);
+        fptr.seekg(pos, ios::cur);
+        fptr.write((char *)&sec_air, sizeof(sec_air));
+        fptr.close();
+        cin.ignore();
+        cin.get();
+        //stop ritght here
+
     }
     else if (post_name == "Flight Lieutenant")
     {
@@ -1437,6 +1691,7 @@ void modify_personel(string post_name)
                 int pos = (-1) * static_cast<int>(sizeof(obj));
                 fl.seekp(pos, ios::cur);
                 fl.write((char *)(&obj), sizeof(sepoy));
+                section_army sec_amy; //object to change the details in the section_army.bin file
                 cout << "\n\n\t Record Updated";
                 found = true;
             }
