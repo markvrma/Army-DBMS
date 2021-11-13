@@ -1,4 +1,7 @@
 
+//company a contains sec1 and sec 2
+//company b contains sec 3 and sec 4
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -240,13 +243,44 @@ public:
         cin >> this->company_id;
     }
 };
-
+void add_sepoy_to_section_(sepoy &s) 
+{
+    ofstream file;
+    file.open("section.bin", ios::binary | ios::app);
+    if (!file.is_open())
+    {
+        cout << "File could not be opened !! Press any Key to exit";
+        cin.ignore();
+        cin.get(); //////////handle here correctly
+        return;
+    }
+    section_army obj;
+    obj.getter_section_army(s);
+    int n;
+    for (int i = 0; i < n; i++)
+    {
+        ifstream fl;
+        fl.open("sepoy.bin", ios::binary | ios::in);
+        if (!fl.is_open())
+        {
+            cout << "File could not be opened !! Press any Key to exit";
+            cin.ignore();
+            cin.get(); //////////handle here correctly
+            return;
+        }
+        obj.getter_section_army(s);
+        file.write((char *)&obj, sizeof(section_army));
+    }
+    file.close();
+    cin.ignore();
+    cin.get();
+}
 class section_army
 {
 protected:
     vector<sepoy> sep; //contains the list of sepoys
     string section_id;
-    string lieutinant_id;
+    string lieutenant_id;
     unsigned num_gun;
     unsigned num_tank;
     unsigned num_mortar;
@@ -256,6 +290,24 @@ public:
     //unsigned num_sepoys();    //counts and returns the number of sepoys in a section
     //void add_sepoy_to_section(sepoy &);  //adds a sepoys into the section whenever a sepoy is added
     //void remove_sepoy_from_section(sepoy &);
+
+    void getter_section_army(sepoy &s)
+    {
+        sep.push_back(s);
+        cout << "Enter section Id: ";
+        cin >> section_id;
+        cout << "Enter lieutenant Id: ";
+        cin >> lieutenant_id;
+        cout << "Enter numbers of guns: ";
+        cin >> num_tank;
+        cout << "Enter number of tanks: ";
+        cin >> num_tank;
+        cout << "Enter number of mortars: ";
+        cin >> num_mortar;
+        cout << "Enter number of combat shotguns: ";
+        cin >> num_combat_shotgun;
+    }
+
     void print_section_info() //displays the information such as weapons and sepoys and lieutinant
     {
         cout << "Section Id: " << section_id << endl;
@@ -264,7 +316,7 @@ public:
         {
             cout << sep.at(i).ret_sep_id() << "   -->  " << sep.at(i).ret_sep_name() << endl;
         }
-        cout << " \nLieutenant Id: " << lieutinant_id << endl;
+        cout << " \nLieutenant Id: " << lieutenant_id << endl;
     }
     void print_section_weapon_info() //prints the weapon information
     {
@@ -275,31 +327,31 @@ public:
         cout << "No. of Mortars: " << num_mortar << endl;
         cout << "No. of Combat Shotguns: " << num_combat_shotgun << endl;
     }
-};
+}sec1,sec2,sec3,sec4;
 
-class company
-{
-private:
-    vector<section_army> sec; //has the list of sections -> section id , lietinant_id, lietunant name
-    string company_id;
-    string major_id;
+// // class company
+// // {
+// // private:
+// //     //vector<section_army> sec; //has the list of sections -> section id , lietinant_id, lietunant name
+// //     string company_id;
+// //     string major_id;
 
-public:
-    //unsigned num_section();
-    void getter_company(); //this is a temporary function just to enter initial values
-    void print_company_info()
-    {
-        cout << "Company Id: " << company_id << endl;
-        cout << "The sections in this company are:-\n";
-        for (int i = 0; i < sec.size() - 1; i++)
-        {
-            sec.at(i).print_section_info();
-            cout << endl
-                 << endl;
-        }
-        cout << " \nMajor Id: " << major_id << endl;
-    }
-};
+// // public:
+// //     //unsigned num_section();
+// //     //void getter_company(); //this is a temporary function just to enter initial values
+// //     //void print_company_info()
+// //     //{
+// //         // cout << "Company Id: " << company_id << endl;
+// //         // cout << "The sections in this company are:-\n";
+// //         // for (int i = 0; i < sec.size() - 1; i++)
+// //         // {
+// //         //     sec.at(i).print_section_info();
+// //         //     cout << endl
+// //         //          << endl;
+// //         // }
+// //         // cout << " \nMajor Id: " << major_id << endl;
+// //     //}
+// // };
 
 //will changes in the sepoy reflect in the platoon binary file implicitly or do we have to handle it explicitly
 // class platoon
@@ -318,7 +370,7 @@ public:
 // };
 
 // he can access all the class using multiple inheritance
-class general : public Major, public section_army, public company //public platoon //can edit the details of any employee // can modify the war and weapons data
+class general : public Major, public section_army //, public company //public platoon //can edit the details of any employee // can modify the war and weapons data
 {
 private:
     string general_username;
